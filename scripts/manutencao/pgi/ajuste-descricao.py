@@ -2,8 +2,7 @@
 
 import ckanapi
 
-ckan_url = u"http://dados.gov.br"
-api_key = u""
+import datasets_pgi
 
 # ask for confirmation
 
@@ -12,6 +11,7 @@ if not answer.strip().lower() == u's':
     print u'Operação cancelada.'
     import sys
     sys.exit(2)
+
 
 # read api key
 try:
@@ -22,11 +22,8 @@ except IOError:
 
 ckansite = ckanapi.RemoteCKAN(ckan_url, apikey=api_key)
 
-datasets_pgi = ckansite.action.dataset_search(q=u"tags:PGI state:active",rows=180)
+pgi_reader = datasets_pgi.DatasetsPGI()
+datasets_pgi = pgi_reader.datasets
 
 for dataset in datasets_pgi[u'results']:
-    for resource in dataset[u'resources']:
-        if resource[u'format']==u'HTML':
-            print u'Excluindo o recurso "{}" do conjunto de dados "{}"...'.format(resource[u'name'], dataset[u'title'])
-            ckansite.action.resource_delete(id=resource[u'id'])
-
+    pass
