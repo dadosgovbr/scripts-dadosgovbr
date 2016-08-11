@@ -24,7 +24,9 @@ source pyenv/bin/activate
 
 **scripts/importacao**: importam conjuntos de dados de outras fontes para o dados.gov.br (futuramente podem ser migrados para a interface de harvesting)
 
-**scripts/extracao**: extrarem dados do portal. Sugere-se colocar os dados extraídos na pasta 'dados', dentro da pasta do script.
+**scripts/extracao**: extraem dados do portal. Sugere-se colocar os dados extraídos na pasta 'dados', dentro da pasta do script.
+
+**scripts/manutencao**: modificam dados do portal.
 
 **api.key** coloque aqui a sua chave de acesso à API do CKAN. A chave está ná página do seu perfil de usuário no CKAN e é visível apenas quando logado.
 
