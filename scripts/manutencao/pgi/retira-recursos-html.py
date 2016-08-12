@@ -19,5 +19,5 @@ for dataset in datasets_pgi[u'results']:
     for resource in dataset[u'resources']:
         if resource[u'format']==u'HTML':
             print u'Excluindo o recurso "{}" do conjunto de dados "{}"...'.format(resource[u'name'], dataset[u'title'])
-            ckansite.action.resource_delete(id=resource[u'id'])
+            pgi_reader.ckansite.action.resource_delete(id=resource[u'id'])
 
