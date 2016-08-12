@@ -3,11 +3,20 @@ dados.gov.br.
 
 # O que é o PGI?
 
-A Plataforma de Gestão de Indicadores (PGI) foi uma ferramenta para agregar
-indicadores de gestão do governo federal a partir de informações prestadas de
-diversos ministérios. Foi desativada no início de 2015 pela Casa Civil, e
-estão disponíveis apenas os dados históricos que haviam sido informados até
-dezembro de 2014.
+A [Plataforma de Gestão de Indicadores (PGI)](http://pgi.gov.br/pgi/) foi uma
+ferramenta criada em 2010, no âmbito do
+[projeto I3Gov](https://i3gov.planejamento.gov.br/), para agregar séries de
+indicadores de gestão a partir de informações prestadas por diversos órgãos
+federais.
+
+Foi desativada no início de 2015 pela Casa Civil da Presidência da República,
+entretanto, ficou estabelecido que o Ministério do Planejamento, Orçamento e
+Gestão manteria disponíveis os dados históricos que haviam sido cadastrados
+até dezembro de 2014.
+
+Cada grupo de série histórica foi mapeada para um conjunto de dados e cada
+série de indicadores foi mapeada para um recurso. Os dados são servidos nos
+formatos XML e JSON pela API do PGI.
 
 # Scripts
 
