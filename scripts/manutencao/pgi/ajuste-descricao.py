@@ -39,7 +39,7 @@ formatos XML e JSON pela API do PGI.
 pgi_reader = datasets_pgi.DatasetsPGI()
 datasets_pgi = pgi_reader.datasets
 
-for dataset in datasets_pgi[u'results'][:2]:
+for dataset in datasets_pgi[u'results']:
     found = description_re.match(dataset[u'notes'])
     if found and found.groups():
         print u'Ajustando descrição do conjunto de dados "{}"...'.format(dataset[u'title'])
