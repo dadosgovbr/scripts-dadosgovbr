@@ -6,7 +6,7 @@ existentes por assunto.
 
 ## Utilização
 
-  ptyhon assuntos.py
+  python assuntos.py
 
 Será criado um arquivo assuntos.html contendo os nomes e links de
 assuntos e conjuntos de dados.
