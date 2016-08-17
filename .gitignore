@@ -3,3 +3,4 @@
 pyenv/*
 api.key
 scripts/extracao/*/dados
+scripts/manutencao/*/dados
