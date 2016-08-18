@@ -1,6 +1,7 @@
 *~
 */.hg/*
 pyenv/*
+*.pyc
 api.key
 scripts/extracao/*/dados
 scripts/manutencao/*/dados
