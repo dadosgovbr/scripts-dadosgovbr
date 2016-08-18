@@ -49,8 +49,11 @@ for offset in xrange(0, dataset_count, MAX_ROWS):
                 ), None)
             if set_org:
                 org_name = urlparse.urlparse(set_org).path.split(u'/')[-1]
-                print u'\nAssociando o dataset "{}" à organização "{}"...'.format(
-                    dataset.get(u'title', u''), org_name)
+                print u'\nAssociando o dataset "{}" ({}) à organização "{}"...'.format(
+                    dataset.get(u'name', u''),
+                    dataset.get(u'title', u''),
+                    org_name
+                    )
                 # get the organization id
                 organization = dataset_reader.ckansite.action.organization_show(id=org_name)
                 # set the owner organization on the package
