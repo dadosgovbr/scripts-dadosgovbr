@@ -57,10 +57,9 @@ for offset in xrange(0, dataset_count, MAX_ROWS):
                 # get the organization id
                 organization = dataset_reader.ckansite.action.organization_show(id=org_name)
                 # set the owner organization on the package
-                dataset_reader.ckansite.action.package_update(
-                    id=dataset[u'id'],
-                    owner_org=organization[u'id']
-                    )
+                dataset_to_update = dataset_reader.ckansite.action.package_show(id=dataset[u'id'])
+                dataset_to_update[u'owner_org'] = organization[u'id']
+                dataset_reader.ckansite.action.package_update(**dataset_to_update)
                     
 print u'\n{} datasets processados.'.format(dataset_count)
 
