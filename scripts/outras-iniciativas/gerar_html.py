@@ -96,12 +96,40 @@ for state in sorted(states.keys()):
     if states[state][u'ativo']:
         modal_html = u''
         catalog_list = u''
+        municipal_catalogs = {}
+        
         for catalog in catalogs:
             if catalog[u'UF'] == state:
-                catalog_list += catalog_template.substitute({
+                catalog_type = u''
+                if catalog[u'Solução'.encode('utf-8')] == u'CKAN':
+                    catalog_type = u'<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
+                # add state catalogs
+                if not catalog[u'Município'.encode('utf-8')]:
+                    catalog_list += catalog_template.substitute({
+                        u'catalog_title': catalog[u'Título'.encode('utf-8')].decode('utf-8'),
+                        u'catalog_url': catalog[u'URL'],
+                        u'catalog_type': catalog_type,
+                        })
+                else:
+                    catalogs_in_this_municipality = municipal_catalogs.setdefault(catalog[u'Município'.encode('utf-8')], [])
+                    catalogs_in_this_municipality.append(catalog)
+        
+        # add municipal catalogs
+        for municipality, municipal_catalogs in municipal_catalogs.items():
+            municipality_html = u'<h4>{}</h4>'.format(municipality.decode('utf-8'))
+            municipality_html += "<dl>"
+            for catalog in municipal_catalogs:
+                catalog_type = u''
+                if catalog[u'Solução'.encode('utf-8')] == u'CKAN':
+                    catalog_type = u'<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
+                municipality_html += catalog_template.substitute({
                     u'catalog_title': catalog[u'Título'.encode('utf-8')].decode('utf-8'),
-                    u'catalog_url': catalog[u'URL']
+                    u'catalog_url': catalog[u'URL'],
+                    u'catalog_type': catalog_type,
                     })
+            municipality_html += "</dl>"
+            catalog_list += municipality_html
+        
         modal_html = modal_template.substitute({
             u'state_abbr': state,
             u'state_name': states[state][u'nome'],
