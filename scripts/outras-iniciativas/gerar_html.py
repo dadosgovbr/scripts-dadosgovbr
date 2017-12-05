@@ -137,6 +137,25 @@ for state in sorted(states.keys()):
             })
         modal_section += modal_html
 
+# national catalogs
+
+catalog_list = u''
+for catalog in catalogs:
+    if not catalog[u'UF']:
+        catalog_type = u''
+        if catalog[u'Solução'.encode('utf-8')] == u'CKAN':
+            catalog_type = u'<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
+        catalog_list += catalog_template.substitute({
+            u'catalog_title': catalog[u'Título'.encode('utf-8')].decode('utf-8'),
+            u'catalog_url': catalog[u'URL'],
+            u'catalog_type': catalog_type,
+            })
+modal_section += modal_template.substitute({
+            u'state_abbr': u'BR',
+            u'state_name': u'Nacionais',
+            u'catalog_list': catalog_list
+            })
+
 # generate page
 
 filein = 'template-pagina.html'
