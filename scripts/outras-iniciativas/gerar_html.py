@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import csv
-from StringIO import StringIO
+from io import StringIO
 from string import Template
 import requests
 import json
@@ -17,9 +17,9 @@ states = {}
 with open(filein) as f:
     reader = csv.DictReader(f)
     for row in reader:
-        states[row[u'Sigla']] = {
-            u'nome': row[u'Nome'].decode('utf-8'),
-            u'ativo': False
+        states[row['Sigla']] = {
+            'nome': row['Nome'],
+            'ativo': False
             }
 
 # get list of data catalogs
@@ -31,9 +31,9 @@ catalogs = []
 r = requests.get(csv_url)
 
 if r.status_code != 200:
-    raise IOError(u'Cannot download data catalogs table from Github repository.')
+    raise IOError('Cannot download data catalogs table from Github repository.')
 
-reader = csv.DictReader(StringIO(r.text.encode('utf-8')))
+reader = csv.DictReader(StringIO(r.text))
 
 for row in reader:
     catalogs.append(row)
@@ -41,8 +41,8 @@ for row in reader:
 # check which states have catalogs
 
 for catalog in catalogs:
-    if catalog[u'UF'] in states.keys():
-        states[catalog[u'UF']][u'ativo'] = True
+    if catalog['UF'] in list(states.keys()):
+        states[catalog['UF']]['ativo'] = True
 
 # generate area activation script
 
@@ -53,11 +53,11 @@ with open(filein) as f:
 
 habilitados_dict = {}
 
-for state in states.keys():
-    if states[state][u'ativo']:
-        habilitados_dict[states[state][u'nome']] = '1'
+for state in list(states.keys()):
+    if states[state]['ativo']:
+        habilitados_dict[states[state]['nome']] = '1'
 
-activate_areas_script = activate_script_template.substitute({u'habilitados_dict': json.dumps(habilitados_dict)})
+activate_areas_script = activate_script_template.substitute({'habilitados_dict': json.dumps(habilitados_dict)})
 
 # generate map colors
 
@@ -71,12 +71,12 @@ tree = ElementTree.parse(filein)
 for a in tree.findall('svg:g[@id="Estados"]/svg:a', ns):
     state = a.get('data-target')[-2:]
     path = a.find('svg:path', ns)
-    if states[state][u'ativo']:
+    if states[state]['ativo']:
         xml_class = path.get('class').replace(' inactive','')
         xml_class += ' active'
         path.set('class', xml_class)
 
-map_svg = ElementTree.tostring(tree.getroot()).decode('utf-8')
+map_svg = ElementTree.tostring(tree.getroot()).decode()
 
 # generate modals
 
@@ -90,70 +90,70 @@ filein = 'catalog_template.html'
 with open(filein) as f:
     catalog_template = Template(f.read())
 
-modal_section = u''
+modal_section = ''
 
 for state in sorted(states.keys()):
-    if states[state][u'ativo']:
-        modal_html = u''
-        catalog_list = u''
+    if states[state]['ativo']:
+        modal_html = ''
+        catalog_list = ''
         municipal_catalogs = {}
         
         for catalog in catalogs:
-            if catalog[u'UF'] == state:
-                catalog_type = u''
-                if catalog[u'Solução'.encode('utf-8')] == u'CKAN':
-                    catalog_type = u'<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
+            if catalog['UF'] == state:
+                catalog_type = ''
+                if catalog['Solução'] == 'CKAN':
+                    catalog_type = '<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
                 # add state catalogs
-                if not catalog[u'Município'.encode('utf-8')]:
+                if not catalog['Município']:
                     catalog_list += catalog_template.substitute({
-                        u'catalog_title': catalog[u'Título'.encode('utf-8')].decode('utf-8'),
-                        u'catalog_url': catalog[u'URL'],
-                        u'catalog_type': catalog_type,
+                        'catalog_title': catalog['Título'],
+                        'catalog_url': catalog['URL'],
+                        'catalog_type': catalog_type,
                         })
                 else:
-                    catalogs_in_this_municipality = municipal_catalogs.setdefault(catalog[u'Município'.encode('utf-8')], [])
+                    catalogs_in_this_municipality = municipal_catalogs.setdefault(catalog['Município'], [])
                     catalogs_in_this_municipality.append(catalog)
         
         # add municipal catalogs
-        for municipality, municipal_catalogs in municipal_catalogs.items():
-            municipality_html = u'<h4>{}</h4>'.format(municipality.decode('utf-8'))
+        for municipality, municipal_catalogs in list(municipal_catalogs.items()):
+            municipality_html = '<h4>{}</h4>'.format(municipality)
             municipality_html += "<dl>"
             for catalog in municipal_catalogs:
-                catalog_type = u''
-                if catalog[u'Solução'.encode('utf-8')] == u'CKAN':
-                    catalog_type = u'<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
+                catalog_type = ''
+                if catalog['Solução'] == 'CKAN':
+                    catalog_type = '<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
                 municipality_html += catalog_template.substitute({
-                    u'catalog_title': catalog[u'Título'.encode('utf-8')].decode('utf-8'),
-                    u'catalog_url': catalog[u'URL'],
-                    u'catalog_type': catalog_type,
+                    'catalog_title': catalog['Título'],
+                    'catalog_url': catalog['URL'],
+                    'catalog_type': catalog_type,
                     })
             municipality_html += "</dl>"
             catalog_list += municipality_html
         
         modal_html = modal_template.substitute({
-            u'state_abbr': state,
-            u'state_name': states[state][u'nome'],
-            u'catalog_list': catalog_list
+            'state_abbr': state,
+            'state_name': states[state]['nome'],
+            'catalog_list': catalog_list
             })
         modal_section += modal_html
 
 # national catalogs
 
-catalog_list = u''
+catalog_list = ''
 for catalog in catalogs:
-    if not catalog[u'UF']:
-        catalog_type = u''
-        if catalog[u'Solução'.encode('utf-8')] == u'CKAN':
-            catalog_type = u'<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
+    if not catalog['UF']:
+        catalog_type = ''
+        if catalog['Solução'] == 'CKAN':
+            catalog_type = '<img src="/wp/wp-content/uploads/2017/12/ckan-logo.png" />'
         catalog_list += catalog_template.substitute({
-            u'catalog_title': catalog[u'Título'.encode('utf-8')].decode('utf-8'),
-            u'catalog_url': catalog[u'URL'],
-            u'catalog_type': catalog_type,
+            'catalog_title': catalog['Título'],
+            'catalog_url': catalog['URL'],
+            'catalog_type': catalog_type,
             })
 modal_section += modal_template.substitute({
-            u'state_abbr': u'BR',
-            u'state_name': u'Nacionais',
-            u'catalog_list': catalog_list
+            'state_abbr': 'BR',
+            'state_name': 'Nacionais',
+            'catalog_list': catalog_list
             })
 
 # generate page
@@ -164,13 +164,13 @@ with open(filein) as f:
     page_template = Template(f.read())
 
 page_html = page_template.substitute({
-    u'activate_areas_script': activate_areas_script,
-    u'map_svg': map_svg,
-    u'modal_section': modal_section
+    'activate_areas_script': activate_areas_script,
+    'map_svg': map_svg,
+    'modal_section': modal_section
     })
 
 fileout = 'outras-iniciativas.html'
 
 with open(fileout, 'w') as f:
-    f.write(page_html.encode('utf-8'))
+    f.write(page_html)
 
