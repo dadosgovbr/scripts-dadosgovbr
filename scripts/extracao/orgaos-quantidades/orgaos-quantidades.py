@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import csv
 from ckanapi import RemoteCKAN
-
 
 dadosgovbr = RemoteCKAN('http://dados.gov.br')
 
