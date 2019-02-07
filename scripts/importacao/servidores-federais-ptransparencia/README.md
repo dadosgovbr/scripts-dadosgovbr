@@ -1,5 +1,8 @@
-Cadastra no portal dados.gov.br como recursos os arquivos de servidores
+**[DEPRECIADO]** Cadastra no portal dados.gov.br como recursos os arquivos de servidores
 do poder executivo federal localizados no Portal da Transparência.
+
+Este script não funciona mais como previsto porque após a reformulação do Portal
+da Transparência em 2018, as URLs mudaram.
 
 # Fonte dos dados
 
